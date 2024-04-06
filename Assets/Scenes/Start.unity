@@ -338,6 +338,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerAnimator: {fileID: 638895010}
+  boxCol: {fileID: 638895008}
+--- !u!61 &638895008 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 7676172894402274666, guid: 2e66e9498a6e94c51a5f9cbb94414b5a,
+    type: 3}
+  m_PrefabInstance: {fileID: 6089213228567565987}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &638895010 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 1195131017544227186, guid: 2e66e9498a6e94c51a5f9cbb94414b5a,

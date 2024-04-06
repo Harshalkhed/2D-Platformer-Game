@@ -4,10 +4,23 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public Animator playerAnimator;
+    [SerializeField] private Animator playerAnimator;
+    [SerializeField] private BoxCollider2D boxCol;
+    private Vector2 boxColInitSize;
+    private Vector2 boxColInitOffset;
+    [SerializeField] float playerSpeed = 8;
+    private Rigidbody2D rb2d;
+    [SerializeField] float jumpForce=2;
+
     private void Awake()
     {
-        
+        rb2d = gameObject.GetComponent<Rigidbody2D>();
+    }
+
+    private void Start()
+    {
+        boxColInitSize = boxCol.size;
+        boxColInitOffset = boxCol.offset;
     }
 
 
@@ -19,60 +32,94 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        float speed = Input.GetAxisRaw("Horizontal");
-        float jump= Input.GetAxisRaw("Vertical"); 
-        
-        //playerAnimator.SetBool("Jump", true);
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical= Input.GetAxisRaw("Vertical");
 
-        playerAnimator.SetFloat("Speed",Mathf.Abs( speed));
+        Crouch();
+        PlayJumpAnimation(vertical);
+        PlayerRunAnimation(horizontal);
+        MoveCharacter(horizontal, vertical);
         
-        Vector3 scale = transform.localScale;
-        Vector3 position = transform.localPosition;
-        if (speed<0)
+
+    }
+
+    private void MoveCharacter(float horizontal,float vertical)
+    {
+        //move character Horizontally
+        Vector3 playerPosition = transform.position;
+        playerPosition.x +=  horizontal * playerSpeed * Time.deltaTime;
+        transform.position = playerPosition;
+        //move character Horizontally
+
+        if(vertical>0)
         {
-            
+            rb2d.AddForce(new Vector2 (0f,jumpForce),ForceMode2D.Force);
+        }
+    }
+
+    private void PlayerRunAnimation(float animationSpeed)
+    {
+        playerAnimator.SetFloat("Speed", Mathf.Abs(animationSpeed));
+
+        Vector3 scale = transform.localScale;
+
+        if (animationSpeed < 0)
+        {
+
             scale.x = -1f * Mathf.Abs(scale.x);
 
         }
-        else if(speed> 0)
+        else if (animationSpeed > 0)
         {
             scale.x = Mathf.Abs(scale.x);
         }
 
         transform.localScale = scale;
+    }
 
-
-         if (jump > 0)
+    private void PlayJumpAnimation(float jumpvalue)
+    {
+        if (jumpvalue > 0)
         {
-            //position.y =  Mathf.Abs(position.y);
             playerAnimator.SetBool("Jump", true);
 
-
         }
         else
+
         {
-            
+
             playerAnimator.SetBool("Jump", false);
+
         }
 
-        transform.localPosition = position;
 
-
-        if(Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl))
-         {
-             
-             playerAnimator.SetBool("Crouch",true);
-
-         }
-        else
-        {
-            playerAnimator.SetBool("Crouch", false);
-        }
-        
 
     }
 
+    private void Crouch()
+    {
+        if (Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl))
+        {
 
+            playerAnimator.SetBool("Crouch", true);
+            float offX = -0.0978f;     //Offset X
+            float offY = 0.5947f;      //Offset Y
+
+            float sizeX = 0.6988f;     //Size X
+            float sizeY = 1.3398f;     //Size Y
+
+            boxCol.size = new Vector2(sizeX, sizeY);   //Setting the size of collider
+            boxCol.offset = new Vector2(offX, offY);   //Setting the offset of collider
+
+        }
+        else
+        {
+            playerAnimator.SetBool("Crouch", false);
+            //Reset collider to initial values
+            boxCol.size = boxColInitSize;
+            boxCol.offset = boxColInitOffset;
+        }
+    }
 
 
 
