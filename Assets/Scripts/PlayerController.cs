@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
 
     private void PlayJumpAnimation(float jumpvalue)
     {
-        if (jumpvalue > 0 && isGrounded)
+        if (jumpvalue > 0)
         {
             playerAnimator.SetBool("Jump", true);
 
