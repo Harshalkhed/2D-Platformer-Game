@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float playerSpeed = 8;
     private Rigidbody2D rb2d;
     [SerializeField] float jumpForce=2;
+    private bool isGrounded = false;
 
     private void Awake()
     {
@@ -79,7 +80,7 @@ public class PlayerController : MonoBehaviour
 
     private void PlayJumpAnimation(float jumpvalue)
     {
-        if (jumpvalue > 0)
+        if (jumpvalue > 0 && isGrounded)
         {
             playerAnimator.SetBool("Jump", true);
 
@@ -121,7 +122,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnCollisionStay2D(Collision2D other)
+    {
+        if (other.transform.tag == "platform")
+        {
+            isGrounded = true;
+        }
+    }
 
+    private void OnCollisionExit2D(Collision2D other)
+    {
+        if (other.transform.tag == "platform")
+        {
+            isGrounded = false;
+        }
+    }
 
 
 
