@@ -12,43 +12,47 @@ public class PlayerController : MonoBehaviour
     private Vector2 boxColInitOffset;
     [SerializeField] float playerSpeed = 8;
     private Rigidbody2D rb2d;
-    [SerializeField] float jumpForce=10;
+    [SerializeField] float jumpForce=2;
+    private bool isGrounded = false;
+    private float delaysec = 1f;
 
-    public void KillPlayer()
+    public void PlayerDead()
     {
-        Debug.Log("PlayerKilled by enemy");
-        //Destroy(gameObject);
+        Debug.Log("Enemy hit ");
+        
         playerAnimator.SetTrigger("Death");
-      
-        ReloadLevel();
+        Invoke("LoadNewScene", delaysec);
+
+
+        
+
     }
 
-    private void ReloadLevel()
+    private void LoadNewScene()
     {
         SceneManager.LoadScene(0);
+
     }
 
-    private bool isGrounded = false;
-//    public ScoreController scoreController;
+    public ScoreController scoreController;
 
 
-  /*  public void pickUpKey()
+    public void pickUpKey()
     {
         Debug.Log("Player has picked up the key");
         scoreController.IncreaseScore(10);
     }
-  */
 
     
 
     private void Awake()
     {
         rb2d = gameObject.GetComponent<Rigidbody2D>();
-        
     }
 
     private void Start()
     {
+        
         boxColInitSize = boxCol.size;
         boxColInitOffset = boxCol.offset;
     }
