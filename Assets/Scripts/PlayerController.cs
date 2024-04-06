@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,6 +14,26 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb2d;
     [SerializeField] float jumpForce=2;
     private bool isGrounded = false;
+    private float delaysec = 1f;
+
+    public void PlayerDead()
+    {
+        Debug.Log("Enemy hit ");
+        
+        playerAnimator.SetTrigger("Death");
+        Invoke("LoadNewScene", delaysec);
+
+
+        
+
+    }
+
+    private void LoadNewScene()
+    {
+        SceneManager.LoadScene(0);
+
+    }
+
     public ScoreController scoreController;
 
 
@@ -31,6 +52,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        
         boxColInitSize = boxCol.size;
         boxColInitOffset = boxCol.offset;
     }
