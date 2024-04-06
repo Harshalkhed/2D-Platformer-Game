@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,16 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb2d;
     [SerializeField] float jumpForce=2;
     private bool isGrounded = false;
+    public ScoreController scoreController;
+
+
+    public void pickUpKey()
+    {
+        Debug.Log("Player has picked up the key");
+        scoreController.IncreaseScore(10);
+    }
+
+    
 
     private void Awake()
     {
