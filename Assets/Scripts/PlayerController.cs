@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private BoxCollider2D boxCol;
+    public GameOverController gameOverController;
     private Vector2 boxColInitSize;
     private Vector2 boxColInitOffset;
     [SerializeField] float playerSpeed = 8;
@@ -21,18 +22,13 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Enemy hit ");
         
         playerAnimator.SetTrigger("Death");
-        Invoke("LoadNewScene", delaysec);
 
+        Invoke("PlayerDied()", delaysec);
 
-        
-
+        gameOverController.PlayerDied();
     }
 
-    private void LoadNewScene()
-    {
-        SceneManager.LoadScene(0);
-
-    }
+   
 
     public ScoreController scoreController;
 
