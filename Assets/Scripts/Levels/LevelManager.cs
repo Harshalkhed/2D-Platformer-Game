@@ -1,29 +1,30 @@
-
+using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
 
     public static LevelManager instance;
 
+    public string[] Levels;
     public static LevelManager Instance { get { return instance; } } //Whenever they call Capital Instance and
                                                                      //they get value of private instance,
-    public string Level1;
-    //so they can acces the instance through
-    //Instance and they can only get the value
-    //not set the value as it is a get function 
+                                                                         //so they can acces the instance through
+                                                                         //Instance and they can only get the value
+                                                                          //not set the value as it is a get function 
 
     private void Start()
     {
 
         
         //PlayerPrefs.DeleteAll();
-        if (GetLevelStatus(Level1) == LevelStatus.Locked)
+        if (GetLevelStatus(Levels[0]) == LevelStatus.Locked)
         {
-            SetLevelStatus(Level1, LevelStatus.Unlocked);
-            Debug.Log(Level1 + " is locked. Unlocking...");
+            SetLevelStatus(Levels[0], LevelStatus.Unlocked);
+            Debug.Log(Levels[0] + " is locked. Unlocking...");
             
-            Debug.Log("Level1 status: " + GetLevelStatus(Level1));
+            Debug.Log("Level1 status: " + GetLevelStatus(Levels[0]));
         }
         
     }
@@ -46,6 +47,23 @@ public class LevelManager : MonoBehaviour
         
     }
 
+    public void MarkCurrentLevelComplete()
+    {
+        Scene currentscene = SceneManager.GetActiveScene();
+        //set level status to complete
+        //and ulock the next level be unlocked
+        SetLevelStatus(currentscene.name, LevelStatus.Completed);
+        // int nextSceneIndex = currentscene.buildIndex + 1;
+        // Scene nextScene=SceneManager.GetSceneByBuildIndex(nextSceneIndex);
+        // SetLevelStatus(nextScene.name, LevelStatus.Unlocked);
+     int currentSceneIndex =   Array.FindIndex(Levels, level => level == currentscene.name);
+        int nextSceneIndex = currentSceneIndex + 1;
+
+        if(nextSceneIndex<Levels.Length)    {
+            SetLevelStatus(Levels[nextSceneIndex], LevelStatus.Unlocked);
+        }
+        
+    }
     
 
 
@@ -57,6 +75,7 @@ public class LevelManager : MonoBehaviour
     public void SetLevelStatus(string level,LevelStatus levelStatus)
     {
         PlayerPrefs.SetInt(level, (int)levelStatus);
+     Debug.Log("Setting " + level + "levelstatus" + levelStatus);
     }
 
 
