@@ -12,14 +12,18 @@ public class PlayerController : MonoBehaviour
     private Vector2 boxColInitSize;
     private Vector2 boxColInitOffset;
     [SerializeField] float playerSpeed = 8;
-    private Rigidbody2D rb2d;
+    private Rigidbody2D playerRigidbody;
     [SerializeField] float jumpForce=2;
-    private bool isGrounded = false;
+    [SerializeField]
+    private bool isgrounded = false;
     private float delaysec = 1f;
+    public Vector2 boxSize;
+    public float castDistance;
+    public LayerMask groundLayer;
 
     public void PlayerDead()
     {
-        Debug.Log("Enemy hit ");
+        
         
         playerAnimator.SetTrigger("Death");
 
@@ -35,7 +39,7 @@ public class PlayerController : MonoBehaviour
 
     public void pickUpKey()
     {
-        Debug.Log("Player has picked up the key");
+       
         scoreController.IncreaseScore(10);
     }
 
@@ -43,7 +47,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        rb2d = gameObject.GetComponent<Rigidbody2D>();
+        playerRigidbody = gameObject.GetComponent<Rigidbody2D>();
     }
 
     private void Start()
@@ -81,9 +85,10 @@ public class PlayerController : MonoBehaviour
         transform.position = playerPosition;
         //move character Horizontally
 
-        if(vertical>0)
+        if(vertical>0 && isGrounded())
         {
-            rb2d.AddForce(new Vector2 (0f,jumpForce),ForceMode2D.Force);
+            playerRigidbody.AddForce(new Vector2 (0f,jumpForce),ForceMode2D.Force);
+            
         }
     }
 
@@ -109,7 +114,7 @@ public class PlayerController : MonoBehaviour
 
     private void PlayJumpAnimation(float jumpvalue)
     {
-        if (jumpvalue > 0)
+        if (jumpvalue > 0 && isGrounded())
         {
             playerAnimator.SetBool("Jump", true);
 
@@ -151,21 +156,24 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnCollisionStay2D(Collision2D other)
+    public bool isGrounded()
     {
-        if (other.transform.tag == "platform")
+       
+        if (Physics2D.BoxCast(transform.position,boxSize,0,-transform.up,castDistance,groundLayer))
         {
-            isGrounded = true;
+            return true;
         }
+        else
+        {
+            return false;
+        }
+        
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube(transform.position-transform.up *castDistance, boxSize);
     }
 
-    private void OnCollisionExit2D(Collision2D other)
-    {
-        if (other.transform.tag == "platform")
-        {
-            isGrounded = false;
-        }
-    }
 
 
 
