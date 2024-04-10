@@ -1,11 +1,14 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
 
     public static LevelManager instance;
+    public int health = 3;
+    public Image[] hearts;
 
     public string[] Levels;
     public static LevelManager Instance { get { return instance; } } //Whenever they call Capital Instance and
